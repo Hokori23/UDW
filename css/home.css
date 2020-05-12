@@ -1,0 +1,46 @@
+#home--page {
+	height: 100%;
+}
+
+#home--left {
+	font-size: 40px;
+	position: relative;
+}
+
+#home--right>div.row {
+	margin: 20px 20%;
+}
+
+
+#home--right .btn {
+	max-width: 150px;
+	min-width: 150px;
+	margin: 0 auto;
+}
+
+#home--page--login--box {
+	box-sizing: border-box;
+	padding: 20px 10%;
+}
+
+#home--page--login--form>div.row {
+	margin: 20px 0;
+	width: 100%;
+}
+
+#home--page--login--form>div.row>h2,
+#home--page--login--form>div.row>div.input-group {
+	max-width: 350px;
+	margin: 10px auto;
+}
+
+div.back-btn {
+	position: absolute;
+	top: 0;
+	left: 0;
+	min-width: 150px;
+	margin: 20px 0 !important;
+}
+.login-btn-group>div{
+	margin: 0 10px;
+}

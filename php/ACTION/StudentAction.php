@@ -1,6 +1,6 @@
 <?php
-require_once '../VO/Database.php';
-require_once '../VO/Student.php';
+require_once '../../VO/Student.php';
+require_once '../../VO/Database.php';
 
 class StudentAction
 {
@@ -15,6 +15,7 @@ class StudentAction
         $studentArr['address'] = $student->getAddress();
         $studentArr['birth'] = $student->getBirth();
         $studentArr['phone_number'] = $student->getPhoneNumber();
+        $studentArr['role'] = $student->getRole();
         return $studentArr;
     }
 
@@ -35,6 +36,7 @@ class StudentAction
             $student->setAddress($row['address']);
             $student->setBirth($row['birth']);
             $student->setPhoneNumber($row['phone_number']);
+            $student->setRole($row['role']);
             $resArr[$i] = $this->toArray($student);
             $i++;
         }
@@ -62,6 +64,7 @@ class StudentAction
             $student->setAddress($row['address']);
             $student->setBirth($row['birth']);
             $student->setPhoneNumber($row['phone_number']);
+            $student->setRole($row['role']);
             $resArr[$i] = $this->toArray($student);
             $i++;
         }
@@ -84,6 +87,7 @@ class StudentAction
         $address = $student->getAddress();
         $birth = $student->getBirth();
         $phone_number = $student->getPhoneNumber();
+        $role = $student->getRole();
 
         $sql = "INSERT INTO student VALUES(
                                             '${id}',
@@ -92,7 +96,8 @@ class StudentAction
                                             '${password}',
                                             '${address}',
                                             '${birth}',
-                                            '${phone_number}'
+                                            '${phone_number}',
+                                            '${role}'
                                             )";
         $res = $conn->execSQL($sql);
         $conn->closeConn();
@@ -110,15 +115,14 @@ class StudentAction
         $id = $student->getId();
         $name = $student->getName();
         $email = $student->getEmail();
-        $password = $student->getPassword();
         $address = $student->getAddress();
         $birth = $student->getBirth();
         $phone_number = $student->getPhoneNumber();
 
-        $sql = "UPDATE student SET  name = '${$name}',
+
+        $sql = "UPDATE student SET name = '${name}',
                                     email = '${email}',
-                                    password = '${password}',
-                                    address = '${address}'
+                                    address = '${address}',
                                     birth = '${birth}',
                                     phone_number = '${phone_number}'
                                 WHERE student_id = '${id}'";

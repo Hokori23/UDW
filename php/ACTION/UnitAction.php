@@ -1,6 +1,6 @@
 <?php
-require_once '../VO/Database.php';
-require_once '../VO/Unit.php';
+require_once '../../VO/Database.php';
+require_once '../../VO/Unit.php';
 
 class UnitAction
 {
@@ -20,11 +20,28 @@ class UnitAction
         return $unitArr;
     }
 
+    //Object to Array(Unit Details)
+    private function toArrayDetails($unit, $unit_time)
+    {
+        $unitArr = array();
+        $unitArr['unit_id'] = $unit->getId();
+        $unitArr['name'] = $unit->getName();
+        $unitArr['uc_name'] = $unit->getUC();
+        $unitArr['lecturer_name'] = $unit->getLecturer();
+        $unitArr['tutor_name'] = $unit->getTutor();
+        $unitArr['capacity'] = $unit->getCapacity();
+        $unitArr['description'] = $unit->getDescription();
+        $unitArr['semester'] = $unit->getSemester();
+        $unitArr['campus'] = $unit->getCampus();
+        $unitArr['time'] = $unit_time->getTime();
+        $unitArr['type'] = $unit_time->getType();
+        return $unitArr;
+    }
     //Retrieve All Units' Info
     public function RetrieveAll()
     {
         $conn = new Database();
-        $sql = "SELECT * FROM unit";
+        $sql = "SELECT * FROM unit_details";
         $res = $conn->querySQL($sql);
         $resArr = array();
         $i = 0;
@@ -32,14 +49,15 @@ class UnitAction
             $unit = new Unit();
             $unit->setId($row['unit_id']);
             $unit->setName($row['name']);
-            $unit->setUC($row['uc_id']);
-            $unit->setLecturer($row['lecturer_id']);
-            $unit->setTutor($row['tutor_id']);
+            $unit->setUC($row['uc_name']);
+            $unit->setLecturer($row['lecturer_name']);
+            $unit->setTutor($row['tutor_name']);
             $unit->setCapacity($row['capacity']);
             $unit->setDescription($row['description']);
             $unit->setSemester($row['semester']);
             $unit->setCampus($row['campus']);
-            $resArr[$i] = $this->toArray($unit);
+            $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
+            $resArr[$i] = $this->toArrayDetails($unit, $unit_time);
             $i++;
         }
         $conn->closeConn();
@@ -54,7 +72,7 @@ class UnitAction
     public function RetrieveById($id)
     {
         $conn = new Database();
-        $sql = "SELECT * FROM unit WHERE unit_id = '${id}'";
+        $sql = "SELECT * FROM unit_details WHERE unit_id = '${id}'";
         $res = $conn->querySQL($sql);
         $resArr = array();
         $i = 0;
@@ -62,14 +80,15 @@ class UnitAction
             $unit = new Unit();
             $unit->setId($row['unit_id']);
             $unit->setName($row['name']);
-            $unit->setUC($row['uc_id']);
-            $unit->setLecturer($row['lecturer_id']);
-            $unit->setTutor($row['tutor_id']);
+            $unit->setUC($row['uc_name']);
+            $unit->setLecturer($row['lecturer_name']);
+            $unit->setTutor($row['tutor_name']);
             $unit->setCapacity($row['capacity']);
             $unit->setDescription($row['description']);
             $unit->setSemester($row['semester']);
             $unit->setCampus($row['campus']);
-            $resArr[$i] = $this->toArray($unit);
+            $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
+            $resArr[$i] = $this->toArrayDetails($unit, $unit_time);
             $i++;
         }
         $conn->closeConn();
@@ -112,7 +131,8 @@ class UnitAction
         $res = $conn->execSQL($sql);
         $conn->closeConn();
         if ($res == 1) {
-            return 1;
+            $unit->setId($this->getLastId());
+            return $this->toArray($unit);
         } else {
             return -1;
         }
@@ -132,10 +152,10 @@ class UnitAction
         $campus = $unit->getCampus();
 
         $sql = "UPDATE unit SET
-                                name = '${$name}',
+                                name = '${name}',
                                 uc_id = '${uc}',
                                 lecturer_id = '${lecturer}',
-                                capacity = '${capacity}'
+                                capacity = '${capacity}',
                                 description = '${description}',
                                 semester = '${semester}',
                                 campus = '${campus}'
@@ -144,7 +164,7 @@ class UnitAction
         $res = $conn->execSQL($sql);
         $conn->closeConn();
         if ($res == 1) {
-            return 1;
+            return $this->toArray($unit);
         } else {
             return -1;
         }
@@ -166,7 +186,7 @@ class UnitAction
         $res = $conn->execSQL($sql);
         $conn->closeConn();
         if ($res == 1) {
-            return 1;
+            return $this->toArray($unit);
         } else {
             return -1;
         }
@@ -177,6 +197,194 @@ class UnitAction
     {
         $conn = new Database();
         $sql = "DELETE FROM unit WHERE unit_id = '${id}'";
+        $res = $conn->execSQL($sql);
+        $conn->closeConn();
+        if ($res == 1) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public function getLastId()
+    {
+        $conn = new Database();
+        $sql = "select max(unit_id) from unit";
+        $res = $conn->querySQL($sql);
+        $row = $res->fetch_assoc();
+        $conn->closeConn();
+        return $row['max(unit_id)'];
+    }
+}
+
+class Unit_TimeAction
+{
+    //Object to Array
+    private function toArray($unit_time)
+    {
+        $unit_timeArr = array();
+        $unit_timeArr['unit_id'] = $unit_time->getId();
+        $unit_timeArr['time'] = $unit_time->getTime();
+        $unit_timeArr['type'] = $unit_time->getType();
+        return $unit_timeArr;
+    }
+
+    public function Create($unit_time)
+    {
+        $conn = new Database();
+        $unit_id = $unit_time->getId();
+        $time = $unit_time->getTime();
+        $type = $unit_time->getType();
+
+        $sql = "INSERT INTO unit_time (
+                                        unit_id,
+                                        time,
+                                        type
+                                        ) VALUES(
+                                        '${unit_id}',
+                                        '${time}',
+                                        '${type}'
+                                        )";
+        $res = $conn->execSQL($sql);
+        $conn->closeConn();
+        if ($res == 1) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public function RetrieveById($id)
+    {
+        $conn = new Database();
+        $sql = "SELECT * FROM unit_time WHERE unit_id = '${id}'";
+        $res = $conn->querySQL($sql);
+        $resArr = array();
+        $i = 0;
+        while ($row = $res->fetch_assoc()) {
+            $unit = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
+            $resArr[$i] = $this->toArray($unit);
+            $i++;
+        }
+        $conn->closeConn();
+        if ($res->num_rows === 0) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    public function Update($unit_time)
+    {
+        $conn = new Database();
+        $unit_id = $unit_time->getId();
+        $time = $unit_time->getTime();
+        $type = $unit_time->getType();
+
+        $sql = "UPDATE unit_time SET
+                                time = '${time}',
+                                type = '${type}'
+                            WHERE unit_id = '${unit_id}'
+                                ";
+        $res = $conn->execSQL($sql);
+        $conn->closeConn();
+        if ($res == 1) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+}
+
+class Unit_EnrollmentAction
+{
+    //Object to Array
+    private function toArray($unit_enrollment)
+    {
+        $unit_enrollmentArr = array();
+        $unit_enrollmentArr['unit_id'] = $unit_enrollment->getId();
+        $unit_enrollmentArr['student_id'] = $unit_enrollment->getStudent();
+        $unit_enrollmentArr['time'] = $unit_enrollment->getTime();
+        $unit_enrollmentArr['type'] = $unit_enrollment->getType();
+        return $unit_enrollmentArr;
+    }
+
+    public function Create($unit_enrollment)
+    {
+        $conn = new Database();
+        $unit_id = $unit_enrollment->getId();
+        $student_id = $unit_enrollment->getStudent();
+        $time = $unit_enrollment->getTime();
+        $type = $unit_enrollment->getType();
+
+        $sql = "INSERT INTO unit_enrollment (
+                                        unit_id,
+                                        student_id,
+                                        time,
+                                        type
+                                        ) VALUES(
+                                        '${unit_id}',
+                                        '${student_id}',
+                                        '${time}',
+                                        '${type}'
+                                        )";
+        $res = $conn->execSQL($sql);
+        $conn->closeConn();
+        if ($res == 1) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public function RetrieveByUnitIdAndStudentId($unit_id,$student_id)
+    {
+        $conn = new Database();
+        $sql = "SELECT * FROM unit_enrollment WHERE unit_id = '${unit_id}' AND student_id = '${student_id}'";
+        $res = $conn->querySQL($sql);
+        $resArr = array();
+        $i = 0;
+        while ($row = $res->fetch_assoc()) {
+            $unit = new Unit_Enrollment($row['unit_id'], $row['student_id'], $row['time'], $row['type']);
+            $resArr[$i] = $this->toArray($unit);
+            $i++;
+        }
+        $conn->closeConn();
+        if ($res->num_rows === 0) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    public function Update($unit_enrollment)
+    {
+        $conn = new Database();
+        $unit_id = $unit_enrollment->getId();
+        $student_id = $unit_enrollment->getStudent();
+        $time = $unit_enrollment->getTime();
+        $type = $unit_enrollment->getType();
+
+        $sql = "UPDATE unit_enrollment SET
+                                time = '${time}',
+                                type = '${type}'
+                            WHERE   unit_id = '${unit_id}'
+                            AND     student_id = '${student_id}'
+                                ";
+        $res = $conn->execSQL($sql);
+        $conn->closeConn();
+        if ($res == 1) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+    public function Delete($unit_enrollment)
+    {
+        $unit_id = $unit_enrollment->getId();
+        $student_id = $unit_enrollment->getStudent();
+        $conn = new Database();
+        $sql = "DELETE FROM unit_enrollment WHERE unit_id = '${unit_id}' AND student_id = '${student_id}'";
         $res = $conn->execSQL($sql);
         $conn->closeConn();
         if ($res == 1) {

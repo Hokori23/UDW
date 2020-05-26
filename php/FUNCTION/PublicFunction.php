@@ -1,11 +1,11 @@
 <?php
 
 //Return JSON Array
-function setReturnJson($errCode, $result)
+function setReturnJson($errcode, $data)
 {
     $arr = array(
-        "errCode" => $errCode,
-        "result" => $result
+        "errcode" => $errcode,
+        "data" => $data
     );
     return $arr;
 }
@@ -17,15 +17,38 @@ function myEcho($code, $message)
 }
 
 //Check Login State
-$expireTime = 1000 * 60 * 60 * 24; //1 day
+
 function expired()
 {
-    if (time() - $_SESSION('time') > $this->expireTime) {
+    $expireTime = 1000 * 60 * 60 * 24; //1 day;
+    $id = $_SESSION['id'];
+    if(!isset($id)){
+        return setReturnJson(401, "You haven't login, please log in");
+    }
+    if (time() - $_SESSION['time'] > $expireTime) {
         //Expired
-        return setReturnJson(1, "Login has expired, please log in again");
+        return setReturnJson(401, "Login has expired, please log in again");
     } else {
         //Refresh Session time
-        $_SESSION('time') = time();
+        $_SESSION["time"] = time();
         return 0;
     }
+}
+
+//Encrypt
+function sha256($data, $rawOutput = false)
+{
+    if (!is_scalar($data)) {
+        return false;
+    }
+    $data = (string) $data;
+    $rawOutput = !!$rawOutput;
+    return hash('sha256', $data, $rawOutput);
+}
+
+//CORS
+function setHeaders(){
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Request-Methods:GET, POST");
+    header("Content-type: application/json");
 }

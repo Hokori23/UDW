@@ -181,7 +181,11 @@ class Staff_Time
     private $staff_id;
     private $time;
 
-
+    public function __construct($staff_id, $time)
+    {
+        $this->staff_id = $staff_id;
+        $this->time = $time;
+    }
 
     /**
      * @return String

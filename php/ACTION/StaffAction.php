@@ -1,6 +1,6 @@
 <?php
-require_once '../VO/Database.php';
-require_once '../VO/Staff.php';
+require_once '../../VO/Database.php';
+require_once '../../VO/Staff.php';
 
 class StaffAction
 {
@@ -18,6 +18,23 @@ class StaffAction
         $staffArr['qualification'] = $staff->getQua();
         $staffArr['expertise'] = $staff->getExp();
         $staffArr['role'] = $staff->getRole();
+        return $staffArr;
+    }
+    //Object to Array
+    private function toArrayDetails($staff,$staff_time)
+    {
+        $staffArr = array();
+        $staffArr['staff_id'] = $staff->getId();
+        $staffArr['name'] = $staff->getName();
+        $staffArr['email'] = $staff->getEmail();
+        $staffArr['password'] = $staff->getPassword();
+        $staffArr['address'] = $staff->getAddress();
+        $staffArr['birth'] = $staff->getBirth();
+        $staffArr['phone_number'] = $staff->getPhoneNumber();
+        $staffArr['qualification'] = $staff->getQua();
+        $staffArr['expertise'] = $staff->getExp();
+        $staffArr['role'] = $staff->getRole();
+        $staffArr['time'] = $staff_time->getTime();
         return $staffArr;
     }
 
@@ -82,6 +99,39 @@ class StaffAction
         }
     }
 
+    //Retrieve All Staff's Details
+    public function RetrieveAll()
+    {
+        $conn = new Database();
+        $sql = "SELECT * FROM staff_details";
+        $res = $conn->querySQL($sql);
+        $resArr = array();
+        $i = 0;
+        while ($row = $res->fetch_assoc()) {
+            $staff = new Staff();
+            $staff->setId($row['staff_id']);
+            $staff->setName($row['name']);
+            $staff->setEmail($row['email']);
+            $staff->setPassword($row['password']);
+            $staff->setAddress($row['address']);
+            $staff->setBirth($row['birth']);
+            $staff->setPhoneNumber($row['phone_number']);
+            $staff->setQua($row['qualification']);
+            $staff->setExp($row['expertise']);
+            $staff->setRole($row['role']);
+            $staff_time = new Staff_Time($row['staff_id'],$row['time']);
+            $resArr[$i] = $this->toArray($staff,$staff_time);
+            $i++;
+        }
+        $conn->closeConn();
+        if ($res->num_rows === 0) {
+            return -1;
+        } else {
+            return $resArr;
+        }
+    }
+
+
     //Create
     public function CreateStaff($staff)
     {
@@ -125,7 +175,6 @@ class StaffAction
         $id = $staff->getId();
         $name = $staff->getName();
         $email = $staff->getEmail();
-        $password = $staff->getPassword();
         $address = $staff->getAddress();
         $birth = $staff->getBirth();
         $phone_number = $staff->getPhoneNumber();
@@ -134,10 +183,9 @@ class StaffAction
         $role = $staff->getRole();
 
         $sql = "UPDATE staff    SET
-                                    name = '${$name}',
+                                    name = '${name}',
                                     email = '${email}',
-                                    password = '${password}',
-                                    address = '${address}'
+                                    address = '${address}',
                                     birth = '${birth}',
                                     phone_number = '${phone_number}',
                                     qualification = '${qualification}',
@@ -189,9 +237,7 @@ class Staff_TimeAction
         $resArr = array();
         $i = 0;
         while ($row = $res->fetch_assoc()) {
-            $staff_time = new Staff_time();
-            $staff_time->setId($row['staff_time_id']);
-            $staff_time->setTime($row['time']);
+            $staff_time = new Staff_time($row['staff_time_id'],$row['time']);
             $resArr[$i] = $this->toArray($staff_time);
             $i++;
         }

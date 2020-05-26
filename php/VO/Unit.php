@@ -235,12 +235,16 @@ class Unit_Enrollment
 {
     private $unit_id;
     private $student_id;
+    private $time;
+    private $type;
 
 
-    public function __construct($id, $student_id)
+    public function __construct($id, $student_id,$time,$type)
     {
         $this->unit_id = $id;
         $this->student_id = $student_id;
+        $this->time = $time;
+        $this->type = $type;
     }
 
     /**
@@ -273,5 +277,37 @@ class Unit_Enrollment
     public function setStudent($student_id)
     {
         $this->student_id = $student_id;
+    }
+
+    /**
+     * @return String
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param String $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param Number $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

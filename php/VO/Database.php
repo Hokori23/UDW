@@ -1,13 +1,12 @@
 <?php
 
-require_once '../FUNCTION/PublicFunction.php';
+require_once '../../FUNCTION/PublicFunction.php';
 
 class Database
 {
 
     private $conn;
 
-    //构造方法初始化连接
     public function __construct()
     {
         $this->conn = @new mysqli('127.0.0.1', 'fangr', '123456', 'fangr');
@@ -18,13 +17,11 @@ class Database
         }
     }
 
-    //关闭连接
     public function closeConn()
     {
         $this->conn->close();
     }
 
-    //增删改
     public function execSQL($sql)
     {
         $res = $this->conn->query($sql);
@@ -32,13 +29,12 @@ class Database
             myEcho($this->conn->errno, $this->conn->error);
             exit();
         }
-        return $this->conn->affected_rows;      //返回影响行数
+        return $this->conn->affected_rows;
     }
 
-    //查
     public function querySQL($sql)
     {
-        $res = $this->conn->query($sql);        //mysqli_result类的对象
+        $res = $this->conn->query($sql);
         if (!$res) {
             myEcho($this->conn->errno, $this->conn->error);
             exit();

@@ -1,22 +1,22 @@
 <?php
 
 session_start();
-require_once "../../ACTION/StudentAction.php";
-require_once '../../VO/Student.php';
-require_once '../../FUNCTION/PublicFunction.php';
+require_once "../../SERVICE/StudentService.php";
+require_once "../../FUNCTION/PublicFunction.php";
 
-header('content-type:application/json');
+setHeaders();
 
-$id = $_GET['student_id'];
-$name = $_GET['name'];
-$email = $_GET['email'];
-$password = $_GET['password'];
-$address = $_GET['address'];
-$birth = $_GET['birth'];
-$phone_number = $_GET['phone_number'];
 
-if (!isset($id) || !isset($name) || !isset($email) || !isset($password) || !isset($address) || !isset($birth) || !isset($phone_number)) {
-    $arr = setReturnJson(1, 'Params Wrong, [id, name, email, password, address, birth, phone_number]');
+$id = $_POST['id'];
+$name = $_POST['name'];
+$email = $_POST['email'];
+$password = $_POST['password'];
+$address = $_POST['address'];
+$birth = $_POST['birth'];
+$phone_number = $_POST['phone_number'];
+
+if (!isset($id) || !isset($name) || !isset($email) || !isset($password)) {
+    $arr = setReturnJson(1, 'Params Wrong, [id, name, email, password(, address, birth, phone_number)]');
     die(json_encode($arr, JSON_UNESCAPED_UNICODE));
 }
 
@@ -24,9 +24,14 @@ $student = new Student();
 $student->setId($id);
 $student->setName($name);
 $student->setEmail($email);
+$student->setPassword($password);
 $student->setAddress($address);
 $student->setBirth($birth);
 $student->setPhoneNumber($phone_number);
+
+//default role -> 4:Student
+$student->setRole(4);
+
 
 $service = new StudentService();
 echo $service->register($student);

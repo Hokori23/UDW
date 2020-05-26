@@ -33,7 +33,11 @@ class UnitService
     public function checkStudentRole($operatorId)
     {
         $retrieveStudent = $this->studentAction->RetrieveByIdNoPassword($operatorId);
-        return $retrieveStudent[0]['role'];
+        if ($retrieveStudent != -1) {
+            return $retrieveStudent[0]['role'];
+        } else {
+            return -1;
+        }
     }
 
     /**DC Only */
@@ -127,6 +131,23 @@ class UnitService
             $final = setReturnJson(0, $unitArr);
         } else {
             $final = setReturnJson(1, "Get Unit Details Failed");
+        }
+        return json_encode($final, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Each Student Unit Detail Page
+    public function EachStudentUnitDetails($operatorId)
+    {
+        $role = $this->checkStudentRole($operatorId);
+        if ($role < 4 || $role == -1) {
+            $final = setReturnJson(1, "No permission to access");
+        } else {
+            $unitArr = $this->action->RetrieveEachAll($operatorId);
+            if ($unitArr != -1) {
+                $final = setReturnJson(0, $unitArr);
+            } else {
+                $final = setReturnJson(1, array());
+            }
         }
         return json_encode($final, JSON_UNESCAPED_UNICODE);
     }

@@ -1,7 +1,8 @@
 <?php
 
 session_start(['cookie_lifetime' => 86400]);
-require_once "../../SERVICE/StaffService.php";
+
+require_once "../../SERVICE/UnitService.php";
 require_once "../../FUNCTION/PublicFunction.php";
 
 setHeaders();
@@ -13,8 +14,9 @@ if ($expiredState) {
     die (json_encode($expiredState,JSON_UNESCAPED_UNICODE));
 }
 
-//Operator's id(DC Only)
+//Operator's id
 $operatorId = $_SESSION['id'];
 
-$service = new StaffService();
-echo $service->queryAll($operatorId);
+
+$service = new UnitService();
+echo $service->EachStudentUnitDetails($operatorId);

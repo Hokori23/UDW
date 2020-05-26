@@ -10,7 +10,7 @@
 
 	function checkLogin() {
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/checklogin.php',
+			url: '../../php/api/checklogin.php',
 			success(data) {
 				console.log(data);
 			},
@@ -22,7 +22,7 @@
 
 	function getStudentInfo() {
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/student/getself.php',
+			url: '../../php/api/student/getself.php',
 			success(data) {
 				if (data.errcode) {
 					alert(data.data)
@@ -46,7 +46,7 @@
 
 	function studentLogin() {
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/student/login.php',
+			url: '../../php/api/student/login.php',
 			method: 'POST',
 			data: {
 				id: '555',
@@ -64,7 +64,7 @@
 	function studentModify() {
 		console.log('modify')
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/student/modify.php',
+			url: '../../php/api/student/modify.php',
 			data: {
 				name: $('#student--name').val(),
 				email: $('#student--email').val(),
@@ -97,7 +97,7 @@
 
 	function getStaffInfo() {
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/staff/getself.php',
+			url: '../../php/api/staff/getself.php',
 			success(data) {
 				if (data.errcode) {
 					alert(data.data)
@@ -123,7 +123,7 @@
 
 	function staffLogin() {
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/staff/login.php',
+			url: '../../php/api/staff/login.php',
 			method: 'POST',
 			data: {
 				id: '1',
@@ -141,7 +141,7 @@
 	function staffModify() {
 		console.log('modify')
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/staff/modify.php',
+			url: '../../php/api/staff/modify.php',
 			data: {
 				name: $('#staff--name').val(),
 				email: $('#staff--email').val(),

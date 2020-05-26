@@ -37,6 +37,25 @@ class UnitAction
         $unitArr['type'] = $unit_time->getType();
         return $unitArr;
     }
+
+    //Object to Array(Each Student Unit Details)
+    private function toArrayEachDetails($unit,$unit_time,$student_id)
+    {
+        $unitArr = array();
+        $unitArr['unit_id'] = $unit->getId();
+        $unitArr['name'] = $unit->getName();
+        $unitArr['uc_name'] = $unit->getUC();
+        $unitArr['lecturer_name'] = $unit->getLecturer();
+        $unitArr['tutor_name'] = $unit->getTutor();
+        $unitArr['capacity'] = $unit->getCapacity();
+        $unitArr['description'] = $unit->getDescription();
+        $unitArr['semester'] = $unit->getSemester();
+        $unitArr['campus'] = $unit->getCampus();
+        $unitArr['time'] = $unit_time->getTime();
+        $unitArr['type'] = $unit_time->getType();
+        $unitArr['student_id'] = $student_id;
+        return $unitArr;
+    }
     //Retrieve All Units' Info
     public function RetrieveAll()
     {
@@ -58,6 +77,37 @@ class UnitAction
             $unit->setCampus($row['campus']);
             $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
             $resArr[$i] = $this->toArrayDetails($unit, $unit_time);
+            $i++;
+        }
+        $conn->closeConn();
+        if ($res->num_rows === 0) {
+            return -1;
+        } else {
+            return $resArr;
+        }
+    }
+
+    //Retrieve Each Student Enrolled Units' Info
+    public function RetrieveEachAll($id)
+    {
+        $conn = new Database();
+        $sql = "SELECT * FROM unit_enroll_details WHERE student_id = '${id}'";
+        $res = $conn->querySQL($sql);
+        $resArr = array();
+        $i = 0;
+        while ($row = $res->fetch_assoc()) {
+            $unit = new Unit();
+            $unit->setId($row['unit_id']);
+            $unit->setName($row['name']);
+            $unit->setUC($row['uc_name']);
+            $unit->setLecturer($row['lecturer_name']);
+            $unit->setTutor($row['tutor_name']);
+            $unit->setCapacity($row['capacity']);
+            $unit->setDescription($row['description']);
+            $unit->setSemester($row['semester']);
+            $unit->setCampus($row['campus']);
+            $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
+            $resArr[$i] = $this->toArrayEachDetails($unit, $unit_time,$row['student_id']);
             $i++;
         }
         $conn->closeConn();
@@ -337,7 +387,7 @@ class Unit_EnrollmentAction
         }
     }
 
-    public function RetrieveByUnitIdAndStudentId($unit_id,$student_id)
+    public function RetrieveByUnitIdAndStudentId($unit_id, $student_id)
     {
         $conn = new Database();
         $sql = "SELECT * FROM unit_enrollment WHERE unit_id = '${unit_id}' AND student_id = '${student_id}'";

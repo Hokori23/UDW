@@ -8,41 +8,77 @@
 	const week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 	function unitQueryAll() {
+
 		$.ajax({
-			url: 'https://200success.cn/udw/php/api/unit/queryall.php',
+			url: '../../php/api/student/login.php',
+			method: 'POST',
+			data: {
+				id: '555',
+				password: '19990412'
+			},
 			success(data) {
 				console.log(data)
-				let unitNameMap = new Map();
-				let unitArr = [];
-				let flag = 0;
-				for (let i = 0; i < data.data.length; i++) {
-					if (!unitNameMap.has(data.data[i].name)) {
-						unitNameMap.set(data.data[i].name, flag);
-						unitArr.push({
-							Unit: data.data[i].name
-						})
-						if (data.data[i].type == 1) {
-							//Lecture Time
-							unitArr[flag]['Lecture time'] = JSON.parse(data.data[i].time);
-						} else {
-							//Tutor Time
-							unitArr[flag]['Tutorial time'] = JSON.parse(data.data[i].time);
-						}
+			},
+			error(e) {
+				console.log(e)
+			}
+		})
 
-						flag++;
-					} else {
-						let position = unitNameMap.get(data.data[i].name);
-						if (data.data[i].type == 1) {
-							//Lecture Time
-							unitArr[position]['Lecture time'] = JSON.parse(data.data[i].time);
+		$.ajax({
+			url: '../../php/api/staff/login.php',
+			method: 'POST',
+			data: {
+				id: '1',
+				password: '19990412'
+			},
+			success(data) {
+				console.log(data)
+			},
+			error(e) {
+				console.log(e)
+			}
+		})
+		
+		$.ajax({
+			url: '../../php/api/unit/studentquery.php',
+			success(data) {
+				if (data.errcode) {
+					alert(data.data)
+					if(data.errcode==401){
+						//back
+					}
+				} else {
+					let unitNameMap = new Map();
+					let unitArr = [];
+					let flag = 0;
+					for (let i = 0; i < data.data.length; i++) {
+						if (!unitNameMap.has(data.data[i].name)) {
+							unitNameMap.set(data.data[i].name, flag);
+							unitArr.push({
+								Unit: data.data[i].name
+							})
+							if (data.data[i].type == 1) {
+								//Lecture Time
+								unitArr[flag]['Lecture time'] = JSON.parse(data.data[i].time);
+							} else {
+								//Tutor Time
+								unitArr[flag]['Tutorial time'] = JSON.parse(data.data[i].time);
+							}
+
+							flag++;
 						} else {
-							//Tutor Time
-							unitArr[position]['Tutorial time'] = JSON.parse(data.data[i].time);
+							let position = unitNameMap.get(data.data[i].name);
+							if (data.data[i].type == 1) {
+								//Lecture Time
+								unitArr[position]['Lecture time'] = JSON.parse(data.data[i].time);
+							} else {
+								//Tutor Time
+								unitArr[position]['Tutorial time'] = JSON.parse(data.data[i].time);
+							}
 						}
 					}
+					paint(unitArr)
 				}
-				console.log(unitArr)
-				paint(unitArr)
 			},
 			error(e) {
 				console.log(e)

@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+session_start(['cookie_lifetime' => 86400]);
 require_once "../../SERVICE/StudentService.php";
 require_once "../../FUNCTION/PublicFunction.php";
 

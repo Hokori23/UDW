@@ -234,9 +234,13 @@ input:focus ~ .input-top {
     color: #999;
     font-weight: 600;
 }
-.nav-content li:hover {
+.nav-content li a:hover {
     color: white;
     cursor: pointer;
+}
+.nav-content li a{
+	color: #999;
+	text-decoration: none;
 }
 
 .sign-box {

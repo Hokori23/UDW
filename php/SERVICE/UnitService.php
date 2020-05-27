@@ -110,13 +110,13 @@ class UnitService
                 if ($this->timeAction->Update($unit_time)) {
                     $final = setReturnJson(0, $this->action->RetrieveById($unit_time->getId())[0]);
                 } else {
-                    $final = setReturnJson(1, "Add Unit Time Failed");
+                    $final = setReturnJson(1, "Modify Unit Time Failed");
                 }
             } else {
                 if ($this->timeAction->Create($unit_time)) {
                     $final = setReturnJson(0, $this->action->RetrieveById($unit_time->getId())[0]);
                 } else {
-                    $final = setReturnJson(1, "Add Unit Time Failed");
+                    $final = setReturnJson(1, "Modify Unit Time Failed");
                 }
             }
         }

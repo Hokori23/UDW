@@ -141,4 +141,29 @@ class StaffService
         }
         return json_encode($final, JSON_UNESCAPED_UNICODE);
     }
+
+    /**DC Only */
+    public function createByDC($staff,$operatorId){
+        if ($this->checkStaffRole($operatorId) > 1) {
+            $final = setReturnJson(1, "No permission to access");
+        } else {
+            return $this->register($staff);
+        }
+        return json_encode($final, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**DC Only */
+    public function deleteByDC($id, $operatorId)
+    {
+        if ($this->checkStaffRole($operatorId) > 1) {
+            $final = setReturnJson(1, "No permission to access");
+        } else {
+            if ($this->action->delete($id) == 1) {
+                $final = setReturnJson(0, "Delete Successfully");
+            } else {
+                $final = setReturnJson(1, "Delete Failed");
+            }
+        }
+        return json_encode($final, JSON_UNESCAPED_UNICODE);
+    }
 }

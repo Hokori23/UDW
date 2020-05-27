@@ -16,9 +16,10 @@ $birth = $_POST['birth'];
 $phone_number = $_POST['phone_number'];
 $qualification = $_POST['qualification'];
 $expertise = $_POST['expertise'];
+$role = $_POST['role'];
 
-if (!isset($id) || !isset($name) || !isset($email) || !isset($password) || !isset($qualification) || !isset($expertise)) {
-    $arr = setReturnJson(1, 'Params Wrong, [id, name, email, password, (address, birth, phone_number,) qualification, expertise]');
+if (!isset($id) || !isset($name) || !isset($email) || !isset($password) || !isset($qualification) || !isset($expertise)||!isset($role)) {
+    $arr = setReturnJson(1, 'Params Wrong, [id, name, email, password, (address, birth, phone_number,) qualification, expertise, role]');
     die(json_encode($arr, JSON_UNESCAPED_UNICODE));
 }
 
@@ -32,8 +33,8 @@ $staff->setBirth($birth);
 $staff->setPhoneNumber($phone_number);
 $staff->setQua($qualification);
 $staff->setExp($expertise);
-$staff->setRole(3);
+$staff->setRole($role||3);
 
 
 $service = new StaffService();
-echo $service->register($staff);
+echo $service->createByDC($staff,$_SESSION('id'));

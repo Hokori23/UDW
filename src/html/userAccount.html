@@ -1,37 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>User Account</title>
-		<!-- <link rel="stylesheet" href="../css/bootstrap.min.css"> -->
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
 		<link rel="stylesheet" href="../css/userAccount.css">
 	</head>
+
 	<body>
 
 		<div class="container">
 			<div class="nav">
 				<div class="nav-title">
 					<div>Welcome</div>
-					<div class="nav-name">Uni</div>
+					<div class="nav-name"></div>
 				</div>
 				<div class="nav-content">
-					<li>Unit Description</li>
-					<li>User Account</li>
-					<li>Academic Staff</li>
-					<li>Unit</li>
-					<li>Unit Enrolment</li>
-					<li>Individual Timetable</li>
-					<li>Unit Management / allocating teaching staff</li>
-					<li>Tutorial Allocation</li>
-					<li>Enrolled Student Details</li>
+					<h1>User Account</h1>
 				</div>
 			</div>
 
+
 			<div class="nav-btn">
-				<span class="line top"></span>
+				<span class="box"></span>
 				<span class="line middle"></span>
-				<span class="line bottom"></span>
 			</div>
 
 
@@ -101,15 +95,35 @@
 						<span></span>
 					</li>
 					<li>
-						<button id='staff--edit'>Edit</button>
+						<button id='staff--time'>Set Time</button>
+					</li>
+					<li>
+						<button id='staff--edit'>Save</button>
 					</li>
 				</ul>
+
 			</div>
 		</div>
 
+				<div class='popup-shadow' style="display: none;"> </div>
+				<!-- Select -->
+				<div class='popup popup-select' style="display: none;">
+					<div class='popup-content main-ul'>
+						<!-- Existed Time -->
+					</div>
+
+					<div class='popup-content-select-box main-ul'>
+						<!-- Add Time -->
+					</div>
+					<div class='popup-btn-group'>
+						<button class='popup-btn popup-btn-cancel'>CANCEL</button>
+						<button class='popup-btn popup-btn-confirm'>CONFIRM</button>
+					</div>
+				</div>
 
 		<script src="../javascript/jquery-3.4.1.min.js"></script>
 		<script src='../javascript/api.js'></script>
 		<script src="../javascript/userAccount.js"></script>
 	</body>
+
 </html>

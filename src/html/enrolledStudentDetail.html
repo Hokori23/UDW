@@ -1,9 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 	<head>
-		<meta charset="utf-8">
-		<title></title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Enrolled Student Detail</title>
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/enrolledStudentDetail.css">
 	</head>
+
 	<body>
+
+		<div class="container">
+			<div class="nav">
+				<div class="nav-title">
+					<div>Welcome</div>
+					<div class="nav-name"></div>
+				</div>
+				<div class="nav-content">
+					<h1>Enrolled Student Detail</h1>
+				</div>
+			</div>
+
+
+			<div class="nav-btn">
+				<span class="box"></span>
+				<span class="line middle"></span>
+			</div>
+
+
+			<div class="main">
+				
+				<!-- staff div -->
+				<div class="main-student">
+					<!-- code here! -->
+					<div class="main-student-list">
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+				<div class='popup-shadow' style="display: none;"> </div>
+				<!-- Select -->
+				<div class='popup popup-select' style="display: none;">
+					<div class='popup-content main-ul'>
+						<!-- Existed Time -->
+					</div>
+
+					<div class='popup-content-select-box main-ul'>
+						<!-- Add Time -->
+					</div>
+					<div class='popup-btn-group'>
+						<button class='popup-btn popup-btn-cancel'>CANCEL</button>
+						<button class='popup-btn popup-btn-confirm'>CONFIRM</button>
+					</div>
+				</div>
+
+		<script src="../javascript/jquery-3.4.1.min.js"></script>
+		<script src='../javascript/api.js'></script>
+		<script src="../javascript/enrolledStudentDetail.js"></script>
 	</body>
+
 </html>

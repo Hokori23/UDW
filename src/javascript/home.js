@@ -7,13 +7,13 @@
 		(async function() {
 			try {
 				let res = await checkLogin();
-				if (!res.errcode) {
+				if (res.errcode == 0) {
 					let user = getUser();
-					$('.nav-name').text(user.name || '');
+					$('.nav-name').text(user && user.name || '');
 					$('.login').find('span').html('Log out');
 				}
 			} catch (e) {
-				alert(e.responseText)
+				alert(e && e.responseText || e)
 			}
 		})()
 	}
@@ -78,7 +78,7 @@
 						$('.login').find('span').html('Login');
 					}
 				} catch (e) {
-					alert(e.responseText)
+					alert(e && e.responseText || e)
 				}
 			})()
 		}
@@ -96,11 +96,11 @@
 		}
 
 		if (data.id.length == 7) {
-			homeStudentLogin(data)
-		}
-
-		if (data.id.length == 12) {
-			homeStaffLogin(data)
+			homeStudentLogin(data);
+		} else if (data.id.length == 12) {
+			homeStaffLogin(data);
+		} else {
+			alert("Id's length need be 7 or 12");
 		}
 
 	})
@@ -125,7 +125,6 @@
 	async function homeStaffLogin(data) {
 		try {
 			let res = await staffLogin(data);
-			console.log(res)
 			if (res.errcode === 0) {
 				localStorage.setItem("udw", JSON.stringify(res.data));
 				$('.main-login').addClass('main-login-tran')

@@ -1,89 +1,84 @@
 (function(window, document) {
-	window.onload = function() {
+	window.onload = async function() {
 		$('.main-title-line').addClass('main-title-ani');
 		$('.nav').addClass('nav_slide');
-		unitQueryAll()
+
+		try {
+			let user = JSON.parse(localStorage.getItem('udw'));
+			let res = await checkLogin();
+			if (res.errcode || !user) {
+				alert("You have not logged in yet");
+				location.href = '../home.html';
+				return;
+			}
+			if (user.role != 4) {
+				alert("Only student accessable");
+				location.href = '../home.html';
+				return;
+			}
+			$('.nav-name').text(user && user.name || '');
+		} catch (e) {
+			console.log(e)
+			alert(e.responseText)
+		}
+		unitQuery();
 	}
 
 	const week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-	function unitQueryAll() {
-
-		$.ajax({
-			url: '../../php/api/student/login.php',
-			method: 'POST',
-			data: {
-				id: '555',
-				password: '19990412'
-			},
-			success(data) {
-				console.log(data)
-			},
-			error(e) {
-				console.log(e)
-			}
-		})
-
-		$.ajax({
-			url: '../../php/api/staff/login.php',
-			method: 'POST',
-			data: {
-				id: '1',
-				password: '19990412'
-			},
-			success(data) {
-				console.log(data)
-			},
-			error(e) {
-				console.log(e)
-			}
-		})
-		
-		$.ajax({
-			url: '../../php/api/unit/studentquery.php',
-			success(data) {
-				if (data.errcode) {
-					alert(data.data)
-					if(data.errcode==401){
-						//back
-					}
-				} else {
-					let unitNameMap = new Map();
-					let unitArr = [];
-					let flag = 0;
-					for (let i = 0; i < data.data.length; i++) {
-						if (!unitNameMap.has(data.data[i].name)) {
-							unitNameMap.set(data.data[i].name, flag);
+	async function unitQuery() {
+		try {
+			let res = await unitQueryByStudent();
+			if (res.errcode) {
+				res.data.length && alert(res.data);
+				if (res.errcode == 401) {
+					//back
+				}
+			} else {
+				console.log(res.data);
+				let unitNameMap = new Map();
+				let unitArr = [];
+				let flag = 0;
+				for (let i = 0; i < res.data.length; i++) {
+					if (!unitNameMap.has(res.data[i].name)) {
+						if (res.data[i].time) {
+							unitNameMap.set(res.data[i].name, flag);
 							unitArr.push({
-								Unit: data.data[i].name
+								Unit: res.data[i].name
 							})
-							if (data.data[i].type == 1) {
+							if (res.data[i].type == 1) {
 								//Lecture Time
-								unitArr[flag]['Lecture time'] = JSON.parse(data.data[i].time);
+								unitArr[flag]['Lecture time'] = JSON.parse(res.data[i].time);
 							} else {
 								//Tutor Time
-								unitArr[flag]['Tutorial time'] = JSON.parse(data.data[i].time);
+								unitArr[flag]['Tutorial time'] = JSON.parse(res.data[i].time);
 							}
 
 							flag++;
-						} else {
-							let position = unitNameMap.get(data.data[i].name);
-							if (data.data[i].type == 1) {
+						}
+					} else {
+						if (res.data[i].time) {
+							let position = unitNameMap.get(res.data[i].name);
+							if (res.data[i].type == 1) {
 								//Lecture Time
-								unitArr[position]['Lecture time'] = JSON.parse(data.data[i].time);
+								let temArr = JSON.parse(res.data[i].time);
+								unitArr[position]['Lecture time'] = unitArr[position]['Lecture time'] || [];
+								unitArr[position]['Lecture time'] = unitArr[position]['Lecture time'].concat(temArr);
 							} else {
 								//Tutor Time
-								unitArr[position]['Tutorial time'] = JSON.parse(data.data[i].time);
+								let temArr = JSON.parse(res.data[i].time);
+								unitArr[position]['Tutorial time'] = unitArr[position]['Tutorial time'] || [];
+								unitArr[position]['Tutorial time'] = unitArr[position]['Tutorial time'].concat(temArr);
 							}
 						}
 					}
-					paint(unitArr)
 				}
-			},
-			error(e) {
-				console.log(e)
+				paint(unitArr)
 			}
-		})
+		} catch (e) {
+			console.log(e);
+			alert(e.responseText);
+		}
 	}
 
 	function paint(Data) {
@@ -135,3 +130,10 @@
 
 	}
 })(window, document);
+
+
+(() => {
+	$('.nav-btn').click(() => {
+		location.href = '../home.html'
+	})
+})();

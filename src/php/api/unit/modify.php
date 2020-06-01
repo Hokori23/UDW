@@ -50,6 +50,5 @@ $unit->setSemester($semester);
 $unit->setCampus($campus);
 
 
-
 $service = new UnitService();
 echo $service->UpdateUnit($unit, $operatorId);

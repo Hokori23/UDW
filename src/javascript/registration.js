@@ -30,7 +30,7 @@ const toRegister = () => {
 	pageStudent.addClass('hidden');
 	pageStaff.addClass('hidden');
 	page.removeClass('hidden');
-	
+
 	//Here to do registration
 }
 const toStudent = () => {
@@ -49,6 +49,18 @@ const checkForm = (form, obj) => {
 			if (!form[i].value) {
 				form[i].placeholder = 'Required'
 				obj.flag = false;
+			} else if (form[i].name === 'studentid') {
+				console.log(form[i].value.length)
+				if (form[i].value.length != 7) {
+					obj.flag = false;
+					alert("Student ID length should be 7.")
+				}
+				// if(form[i].value.length)
+			} else if (form[i].name === 'staffid') {
+				if (form[i].value.length != 12) {
+					obj.flag = false;
+					alert("Staff ID length should be 12.")
+				}
 			} else if (form[i].name === 'passworddouble') {
 				//password Double Check
 				if (form[i].value !== form[i - 1].value) {
@@ -114,7 +126,7 @@ studentConfirm.click(() => {
 	if (obj.flag) {
 		//Success
 		//init value
-		
+
 		let data = new studentData();
 		upData(data, "student");
 
@@ -122,10 +134,9 @@ studentConfirm.click(() => {
 			studentForm[i].value = ''
 			studentForm[i].placeholder = ''
 		}
-		toRegister()
 	}
 
-	
+
 
 
 })
@@ -146,7 +157,6 @@ staffConfirm.click(() => {
 			staffForm[i].value = ''
 			staffForm[i].placeholder = ''
 		}
-		toRegister()
 	}
 })
 
@@ -175,24 +185,29 @@ staffReset.click(() => {
  * @description add
  */
 
-function upData(data, path) {
+async function upData(data, path) {
+	console.log(data)
 	if (path === "student") {
-		$.post('./php/api/student/register.php', data, function(data) {
-			if (data.error === 0) {
-				localStorage.udw = JSON.stringify(data.data);
-			}
-			else console.error(data.data)
-		})
+		let res = await studentRegister(data);
+
+		if (!res.errorcode) {
+			localStorage.udw = JSON.stringify(res.data);
+			location.href='../home.html';
+		} else {
+			alert(res.data)
+		}
 	}
 
 
 	if (path === "staff") {
-		$.post('./php/api/staff/register.php', data, function(data) {
-			if (data.error === 0) {
-				localStorage.udw = JSON.stringify(data.data);
-			}
-			else console.error(data.data)
-		})
+		let res = await staffRegister(data);
+
+		if (!res.errorcode) {
+			localStorage.udw = JSON.stringify(res.data);
+			location.href='../home.html';
+		} else {
+			alert(res.data)
+		}
 	}
 }
 
@@ -205,10 +220,10 @@ function studentData() {
 		id: getStudentValue(0),
 		name: getStudentValue(1),
 		password: getStudentValue(2),
-		mail: getStudentValue(4),
+		email: getStudentValue(4),
 		address: getStudentValue(5),
-		birthday: getStudentValue(6),
-		phone: getStudentValue(7)
+		birth: getStudentValue(6),
+		phone_number: getStudentValue(7)
 	}
 }
 
@@ -221,11 +236,11 @@ function staffData() {
 		id: getStaffValue(0),
 		name: getStaffValue(1),
 		password: getStaffValue(2),
-		mail: getStaffValue(4),
-		qualification : getStaffValue(5),
+		email: getStaffValue(4),
+		qualification: getStaffValue(5),
 		expertise: getStaffValue(6),
 		address: getStaffValue(7),
-		birthday: getStaffValue(8),
-		phone: getStaffValue(9)
+		birth: getStaffValue(8),
+		phone_number: getStaffValue(9)
 	}
 }

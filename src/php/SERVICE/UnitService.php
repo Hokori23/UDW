@@ -47,14 +47,10 @@ class UnitService
         if ($role > 1 || $role == -1) {
             $final = setReturnJson(1, "No permission to access");
         } else {
-            if ($this->action->RetrieveById($unit->getId()) != -1) {
-                if ($this->action->CreateUnit($unit)) {
-                    $final = setReturnJson(0, $this->action->RetrieveById($this->action->getLastId())[0]);
-                } else {
-                    $final = setReturnJson(1, "Create Unit Failed");
-                }
+            if ($this->action->CreateUnit($unit)) {
+                $final = setReturnJson(0, $this->action->RetrieveById($this->action->getLastId())[0]);
             } else {
-                $final = setReturnJson(1, "Unit already Exsited");
+                $final = setReturnJson(1, "Create Unit Failed");
             }
         }
         return json_encode($final, JSON_UNESCAPED_UNICODE);
@@ -101,20 +97,22 @@ class UnitService
     {
         $role = $this->checkStaffRole($operatorId);
 
-        // return json_encode(setReturnJson(0, $operatorId), JSON_UNESCAPED_UNICODE);
 
         if ($role != 2) {
             $final = setReturnJson(1, "No permission to access");
         } else {
-            if ($this->timeAction->RetrieveById($unit_time->getId()) != -1) {
+
+            if ($this->timeAction->RetrieveByIdAndType($unit_time->getId(),$unit_time->getType()) != -1) {
                 if ($this->timeAction->Update($unit_time)) {
-                    $final = setReturnJson(0, $this->action->RetrieveById($unit_time->getId())[0]);
+                    // $final = setReturnJson(0, $this->action->RetrieveById($unit_time->getId())[0]);
+                    $final = setReturnJson(0, "Update");
                 } else {
                     $final = setReturnJson(1, "Modify Unit Time Failed");
                 }
             } else {
                 if ($this->timeAction->Create($unit_time)) {
-                    $final = setReturnJson(0, $this->action->RetrieveById($unit_time->getId())[0]);
+                    // $final = setReturnJson(0, $this->action->RetrieveById($unit_time->getId())[0]);
+                    $final = setReturnJson(0, "Create");
                 } else {
                     $final = setReturnJson(1, "Modify Unit Time Failed");
                 }
@@ -131,6 +129,23 @@ class UnitService
             $final = setReturnJson(0, $unitArr);
         } else {
             $final = setReturnJson(1, "Get Unit Details Failed");
+        }
+        return json_encode($final, JSON_UNESCAPED_UNICODE);
+    }
+
+    // All Student Unit Detail Page
+    public function AllStudentUnitDetails($operatorId)
+    {
+        $role = $this->checkStaffRole($operatorId);
+        if ($role > 3 || $role == -1) {
+            $final = setReturnJson(1, "No permission to access");
+        } else {
+            $unitArr = $this->action->RetrieveAllStudent();
+            if ($unitArr != -1) {
+                $final = setReturnJson(0, $unitArr);
+            } else {
+                $final = setReturnJson(1, array());
+            }
         }
         return json_encode($final, JSON_UNESCAPED_UNICODE);
     }
@@ -154,7 +169,8 @@ class UnitService
 
     public function Enrollment($unit_enrollment, $operatorId)
     {
-        if ($this->checkStudentRole($operatorId) != 4) {
+        // $final = setReturnJson(0,$unit_enrollment->getTime());
+        if ($this->checkStudentRole($operatorId) != 4 && $this->checkStaffRole($operatorId) != 2) {
             $final = setReturnJson(1, "No permission to access");
         } else {
             if ($this->action->RetrieveById($unit_enrollment->getId()) == -1) {
@@ -162,7 +178,7 @@ class UnitService
                 return json_encode($final, JSON_UNESCAPED_UNICODE);
             }
 
-            if ($this->enrollmentAction->RetrieveByUnitIdAndStudentId($unit_enrollment->getId(), $unit_enrollment->getStudent()) != -1) {
+            if ($this->enrollmentAction->RetrieveByUnitIdAndStudentIdAndType($unit_enrollment->getId(), $unit_enrollment->getStudent(), $unit_enrollment->getType()) != -1) {
 
                 if ($this->enrollmentAction->Update($unit_enrollment)) {
                     $final = setReturnJson(0, "Enroll Successfully");

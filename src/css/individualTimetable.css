@@ -134,6 +134,17 @@ html, body {
     top: 16px;
 }
 
+.box{
+	display: block;
+	height: 10px;
+	width: 10px;
+	position: relative;
+	top: 6px;
+	left: 5px;
+	border-left: 2px #fff solid;
+	border-top: 2px #fff solid;
+	transform: rotate(-45deg);
+}
 
 .nav-btn-hover .line {
     background-color: #87daff;

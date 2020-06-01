@@ -22,7 +22,7 @@ $birth = $_GET['birth'];
 $phone_number = $_GET['phone_number'];
 
 if (!isset($id) || !isset($name) || !isset($email)) {
-    $arr = setReturnJson(1, 'Params Wrong, [name, email, address, birth, phone_number)]');
+    $arr = setReturnJson(1, 'Params Wrong, [name, email(, address, birth, phone_number)]');
     die(json_encode($arr, JSON_UNESCAPED_UNICODE));
 }
 

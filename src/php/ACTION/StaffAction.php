@@ -73,12 +73,12 @@ class StaffAction
     public function RetrieveByIdNoPassword($id)
     {
         $conn = new Database();
-        $sql = "SELECT * FROM staff WHERE staff_id = '${id}'";
+        $sql = "SELECT * FROM staff_details WHERE staff_id = '${id}'";
         $res = $conn->querySQL($sql);
         $resArr = array();
         $i = 0;
         while ($row = $res->fetch_assoc()) {
-            $staff = new staff();
+            $staff = new Staff();
             $staff->setId($row['staff_id']);
             $staff->setName($row['name']);
             $staff->setEmail($row['email']);
@@ -88,7 +88,8 @@ class StaffAction
             $staff->setQua($row['qualification']);
             $staff->setExp($row['expertise']);
             $staff->setRole($row['role']);
-            $resArr[$i] = $this->toArray($staff);
+            $staff_time = new Staff_Time($row['staff_id'],$row['time']);
+            $resArr[$i] = $this->toArrayDetails($staff,$staff_time);
             $i++;
         }
         $conn->closeConn();
@@ -100,7 +101,7 @@ class StaffAction
     }
 
     //Retrieve All Staff's Details
-    public function RetrieveAll()
+    public function RetrieveAllNoPassword()
     {
         $conn = new Database();
         $sql = "SELECT * FROM staff_details";
@@ -112,7 +113,7 @@ class StaffAction
             $staff->setId($row['staff_id']);
             $staff->setName($row['name']);
             $staff->setEmail($row['email']);
-            $staff->setPassword($row['password']);
+            $staff->setPassword(null);
             $staff->setAddress($row['address']);
             $staff->setBirth($row['birth']);
             $staff->setPhoneNumber($row['phone_number']);
@@ -120,7 +121,7 @@ class StaffAction
             $staff->setExp($row['expertise']);
             $staff->setRole($row['role']);
             $staff_time = new Staff_Time($row['staff_id'],$row['time']);
-            $resArr[$i] = $this->toArray($staff,$staff_time);
+            $resArr[$i] = $this->toArrayDetails($staff,$staff_time);
             $i++;
         }
         $conn->closeConn();
@@ -277,8 +278,8 @@ class Staff_TimeAction
         $time = $staff_time->getTime();
 
         $sql = "UPDATE staff_time   SET
-                                        time = '${$time}'
-                                    WHERE staff_id = '${id}',
+                                        time = '${time}'
+                                    WHERE staff_id = '${id}'
                                 ";
         $res = $conn->execSQL($sql);
         $conn->closeConn();

@@ -21,7 +21,7 @@ class UnitAction
     }
 
     //Object to Array(Unit Details)
-    private function toArrayDetails($unit, $unit_time)
+    private function toArrayDetails($unit, $unit_time, $uc_id, $lecturer_id, $tutor_id)
     {
         $unitArr = array();
         $unitArr['unit_id'] = $unit->getId();
@@ -35,11 +35,14 @@ class UnitAction
         $unitArr['campus'] = $unit->getCampus();
         $unitArr['time'] = $unit_time->getTime();
         $unitArr['type'] = $unit_time->getType();
+        $unitArr['uc_id'] = $uc_id;
+        $unitArr['lecturer_id'] = $lecturer_id;
+        $unitArr['tutor_id'] = $tutor_id;
         return $unitArr;
     }
 
     //Object to Array(Each Student Unit Details)
-    private function toArrayEachDetails($unit,$unit_time,$student_id)
+    private function toArrayEachDetails($unit, $unit_time, $student_id)
     {
         $unitArr = array();
         $unitArr['unit_id'] = $unit->getId();
@@ -56,6 +59,28 @@ class UnitAction
         $unitArr['student_id'] = $student_id;
         return $unitArr;
     }
+
+    //Object to Array(Each Enrolled Student Unit Details)
+    private function toArrayEachEnrolledDetails($unit, $unit_time, $student_id,$student_name)
+    {
+        $unitArr = array();
+        $unitArr['unit_id'] = $unit->getId();
+        $unitArr['name'] = $unit->getName();
+        $unitArr['uc_name'] = $unit->getUC();
+        $unitArr['lecturer_name'] = $unit->getLecturer();
+        $unitArr['tutor_name'] = $unit->getTutor();
+        $unitArr['capacity'] = $unit->getCapacity();
+        $unitArr['description'] = $unit->getDescription();
+        $unitArr['semester'] = $unit->getSemester();
+        $unitArr['campus'] = $unit->getCampus();
+        $unitArr['time'] = $unit_time->getTime();
+        $unitArr['type'] = $unit_time->getType();
+        $unitArr['student_id'] = $student_id;
+        $unitArr['student_name'] = $student_name;
+        return $unitArr;
+    }
+
+
     //Retrieve All Units' Info
     public function RetrieveAll()
     {
@@ -76,7 +101,38 @@ class UnitAction
             $unit->setSemester($row['semester']);
             $unit->setCampus($row['campus']);
             $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
-            $resArr[$i] = $this->toArrayDetails($unit, $unit_time);
+            $resArr[$i] = $this->toArrayDetails($unit, $unit_time, $row['uc_id'], $row['lecturer_id'], $row['tutor_id']);
+            $i++;
+        }
+        $conn->closeConn();
+        if ($res->num_rows === 0) {
+            return -1;
+        } else {
+            return $resArr;
+        }
+    }
+
+    //Retrieve All Enrolled Student Detail
+    public function RetrieveAllStudent()
+    {
+        $conn = new Database();
+        $sql = "SELECT * FROM unit_enroll_details";
+        $res = $conn->querySQL($sql);
+        $resArr = array();
+        $i = 0;
+        while ($row = $res->fetch_assoc()) {
+            $unit = new Unit();
+            $unit->setId($row['unit_id']);
+            $unit->setName($row['name']);
+            $unit->setUC($row['uc_name']);
+            $unit->setLecturer($row['lecturer_name']);
+            $unit->setTutor($row['tutor_name']);
+            $unit->setCapacity($row['capacity']);
+            $unit->setDescription($row['description']);
+            $unit->setSemester($row['semester']);
+            $unit->setCampus($row['campus']);
+            $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
+            $resArr[$i] = $this->toArrayEachEnrolledDetails($unit, $unit_time, $row['student_id'],$row['student_name']);
             $i++;
         }
         $conn->closeConn();
@@ -107,7 +163,7 @@ class UnitAction
             $unit->setSemester($row['semester']);
             $unit->setCampus($row['campus']);
             $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
-            $resArr[$i] = $this->toArrayEachDetails($unit, $unit_time,$row['student_id']);
+            $resArr[$i] = $this->toArrayEachDetails($unit, $unit_time, $row['student_id']);
             $i++;
         }
         $conn->closeConn();
@@ -138,7 +194,7 @@ class UnitAction
             $unit->setSemester($row['semester']);
             $unit->setCampus($row['campus']);
             $unit_time = new Unit_Time($row['unit_id'], $row['time'], $row['type']);
-            $resArr[$i] = $this->toArrayDetails($unit, $unit_time);
+            $resArr[$i] = $this->toArrayDetails($unit, $unit_time, $row['uc_id'], $row['lecturer_id'], $row['tutor_id']);
             $i++;
         }
         $conn->closeConn();
@@ -230,7 +286,7 @@ class UnitAction
 
         $sql = "UPDATE unit SET
                                 lecturer_id = '${lecturer}',
-                                tutor_id = '${tutor}',
+                                tutor_id = '${tutor}'
                             WHERE unit_id = '${id}'
                                 ";
         $res = $conn->execSQL($sql);
@@ -304,10 +360,10 @@ class Unit_TimeAction
         }
     }
 
-    public function RetrieveById($id)
+    public function RetrieveByIdAndType($id,$type)
     {
         $conn = new Database();
-        $sql = "SELECT * FROM unit_time WHERE unit_id = '${id}'";
+    $sql = "SELECT * FROM unit_time WHERE unit_id = '${id}' AND type = '${type}'";
         $res = $conn->querySQL($sql);
         $resArr = array();
         $i = 0;
@@ -331,10 +387,12 @@ class Unit_TimeAction
         $time = $unit_time->getTime();
         $type = $unit_time->getType();
 
-        $sql = "UPDATE unit_time SET
-                                time = '${time}',
-                                type = '${type}'
-                            WHERE unit_id = '${unit_id}'
+        $sql = "UPDATE unit_time    SET
+                                        time = '${time}'
+                                    WHERE
+                                        unit_id = '${unit_id}'
+                                    AND 
+                                        type = '${type}'
                                 ";
         $res = $conn->execSQL($sql);
         $conn->closeConn();
@@ -387,10 +445,10 @@ class Unit_EnrollmentAction
         }
     }
 
-    public function RetrieveByUnitIdAndStudentId($unit_id, $student_id)
+    public function RetrieveByUnitIdAndStudentIdAndType($unit_id, $student_id, $type)
     {
         $conn = new Database();
-        $sql = "SELECT * FROM unit_enrollment WHERE unit_id = '${unit_id}' AND student_id = '${student_id}'";
+        $sql = "SELECT * FROM unit_enrollment WHERE unit_id = '${unit_id}' AND student_id = '${student_id}' AND type = '${type}'";
         $res = $conn->querySQL($sql);
         $resArr = array();
         $i = 0;
@@ -416,10 +474,10 @@ class Unit_EnrollmentAction
         $type = $unit_enrollment->getType();
 
         $sql = "UPDATE unit_enrollment SET
-                                time = '${time}',
-                                type = '${type}'
+                                time = '${time}'
                             WHERE   unit_id = '${unit_id}'
                             AND     student_id = '${student_id}'
+                            AND     type = '${type}'
                                 ";
         $res = $conn->execSQL($sql);
         $conn->closeConn();

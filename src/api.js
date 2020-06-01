@@ -2,7 +2,7 @@
 function checkLogin() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/checklogin.php',
+			url: './php/api/checklogin.php',
 			success(data) {
 				if (data.errcode) {
 					localStorage.removeItem('udw')
@@ -19,7 +19,7 @@ function checkLogin() {
 function logOut() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/logout.php',
+			url: './php/api/logout.php',
 			success(data) {
 				if (!data.errcode) {
 					localStorage.removeItem('udw')
@@ -42,7 +42,7 @@ function getUser() {
 function staffGetSelf() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/getself.php',
+			url: './php/api/staff/getself.php',
 			success(data) {
 				resolve(data)
 			},
@@ -56,7 +56,7 @@ function staffGetSelf() {
 function staffLogin(data) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/login.php',
+			url: './php/api/staff/login.php',
 			data: data,
 			method: 'POST',
 			success(data) {
@@ -72,7 +72,7 @@ function staffLogin(data) {
 function staffRegister(staff) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/register.php',
+			url: './php/api/staff/register.php',
 			data: staff,
 			method: 'POST',
 			success(data) {
@@ -88,7 +88,7 @@ function staffRegister(staff) {
 function staffModifySelf(staff) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/modify.php',
+			url: './php/api/staff/modify.php',
 			data: staff,
 			success(data) {
 				resolve(data)
@@ -103,7 +103,7 @@ function staffModifySelf(staff) {
 function staffModifyTime(time){
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/modifytime.php',
+			url: './php/api/staff/modifytime.php',
 			data: time,
 			success(data) {
 				resolve(data)
@@ -118,7 +118,7 @@ function staffModifyTime(time){
 function staffModifyByUC(staff) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/modify.php',
+			url: './php/api/staff/modify.php',
 			data: staff,
 			success(data) {
 				resolve(data)
@@ -133,7 +133,7 @@ function staffModifyByUC(staff) {
 function staffDeleteByDC(id) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/delete.php',
+			url: './php/api/staff/delete.php',
 			data: {
 				id: id,
 			},
@@ -150,7 +150,7 @@ function staffDeleteByDC(id) {
 function staffCreateByUC(staff) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/register.php',
+			url: './php/api/staff/register.php',
 			data: staff,
 			method: 'POST',
 			success(data) {
@@ -166,7 +166,7 @@ function staffCreateByUC(staff) {
 function staffRetrieveByUC() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/staff/queryall.php',
+			url: './php/api/staff/queryall.php',
 			success(data) {
 				resolve(data)
 			},
@@ -182,7 +182,7 @@ function staffRetrieveByUC() {
 function studentGetSelf() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/student/getself.php',
+			url: './php/api/student/getself.php',
 			success(data) {
 				resolve(data)
 			},
@@ -196,7 +196,7 @@ function studentGetSelf() {
 function studentLogin(data) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/student/login.php',
+			url: './php/api/student/login.php',
 			method: 'POST',
 			data: data,
 			success(data) {
@@ -212,7 +212,7 @@ function studentLogin(data) {
 function studentRegister(student) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/student/register.php',
+			url: './php/api/student/register.php',
 			method: 'POST',
 			data: student,
 			success(data) {
@@ -228,7 +228,7 @@ function studentRegister(student) {
 function studentModify(student) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/student/modify.php',
+			url: './php/api/student/modify.php',
 			data:student,
 			success(data) {
 				resolve(data)
@@ -254,7 +254,7 @@ function unitCreateByDC(unit) {
 	} = unit;
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/create.php',
+			url: './php/api/unit/create.php',
 			data: {
 				name: name,
 				uc_id: uc_id,
@@ -287,7 +287,7 @@ function unitModifyByDC(unit) {
 	} = unit;
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/modify.php',
+			url: './php/api/unit/modify.php',
 			data: {
 				unit_id: unit_id,
 				name: name,
@@ -311,7 +311,7 @@ function unitModifyByDC(unit) {
 function unitDeleteByDC(unit_id) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/delete.php',
+			url: './php/api/unit/delete.php',
 			data: {
 				unit_id: unit_id
 			},
@@ -329,7 +329,7 @@ function unitModifyByUC(unit) {
 
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/modify.php',
+			url: './php/api/unit/modify.php',
 			data: unit,
 			success(data) {
 				resolve(data)
@@ -345,7 +345,7 @@ function unitModifyByUC(unit) {
 function unitRetrieve() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/queryall.php',
+			url: './php/api/unit/queryall.php',
 			success(data) {
 				resolve(data)
 			},
@@ -359,7 +359,7 @@ function unitRetrieve() {
 function unitEnroll(unit) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/enroll.php',
+			url: './php/api/unit/enroll.php',
 			data: unit,
 			success(data) {
 				resolve(data)
@@ -374,7 +374,7 @@ function unitEnroll(unit) {
 function unitQueryByStudent() {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/studentquery.php',
+			url: './php/api/unit/studentquery.php',
 			success(data) {
 				resolve(data)
 			},
@@ -388,7 +388,7 @@ function unitQueryByStudent() {
 function allStudentUnitDetails(){
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/queryenrolled.php',
+			url: './php/api/unit/queryenrolled.php',
 			success(data) {
 				resolve(data)
 			},
@@ -403,7 +403,7 @@ function allStudentUnitDetails(){
 function unitTimeModifyByUC(unit_time) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
-			url: '../php/api/unit/time.php',
+			url: './php/api/unit/time.php',
 			data: unit_time,
 			success(data) {
 				resolve(data)

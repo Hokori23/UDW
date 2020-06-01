@@ -69,7 +69,7 @@ class StaffService
         } else {
             if ($this->action->CreateStaff($staff)) {
                 /**Init Staff Time */
-                $this->timeAction->CreateStaff_Time(new Staff_Time($staff->getId(), '0'));
+                $this->timeAction->CreateStaff_Time(new Staff_Time($staff->getId(), '[]'));
 
 
                 /**Set Session */
@@ -132,7 +132,7 @@ class StaffService
         if ($role > 1) {
             $final = setReturnJson(1, "No permission to access");
         } else {
-            $staffArr = $this->action->RetrieveAll();
+            $staffArr = $this->action->RetrieveAllNoPassword();
             if ($staffArr != -1) {
                 $final = setReturnJson(0, $staffArr);
             } else {
@@ -143,7 +143,8 @@ class StaffService
     }
 
     /**DC Only */
-    public function createByDC($staff,$operatorId){
+    public function createByDC($staff, $operatorId)
+    {
         if ($this->checkStaffRole($operatorId) > 1) {
             $final = setReturnJson(1, "No permission to access");
         } else {
@@ -162,6 +163,27 @@ class StaffService
                 $final = setReturnJson(0, "Delete Successfully");
             } else {
                 $final = setReturnJson(1, "Delete Failed");
+            }
+        }
+        return json_encode($final, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function staffTime($staff_time, $operatorId)
+    {
+        $flag = 0;
+        if ($this->checkStaffRole($operatorId) > 3) {
+            $final = setReturnJson(1, "No permission to access");
+        } else {
+            if($this->timeAction->RetrieveById($operatorId)!=-1){
+                $flag = $this->timeAction->UpdateStaff_Time($staff_time);
+                
+            }else{
+                $flag = $this->timeAction->CreateStaff_Time($staff_time);
+            }
+            if ($flag) {
+                $final = setReturnJson(0, "Update Time Successfully");
+            } else {
+                $final = setReturnJson(1, "Update Time Failed");
             }
         }
         return json_encode($final, JSON_UNESCAPED_UNICODE);

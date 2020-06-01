@@ -16,4 +16,5 @@ if (!isset($id)) {
 
 
 $service = new StaffService();
-echo $service->register($id,$_SESSION('id'));
+
+echo $service->deleteByDC($id,$_SESSION['id']);

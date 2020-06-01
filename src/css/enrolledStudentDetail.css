@@ -474,13 +474,13 @@ html, body {
     z-index: 10;
 }
 
-.main-staff-list{
+.main-student-list{
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
 }
 
-.main-staff-list>ul{
+.main-student-list>ul{
 	width: 50%;
 }
 
@@ -623,12 +623,16 @@ html, body {
 
 .time-item:before {
 	font-weight: bold;
-	content: 'Time';
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-
+.time-item-lecture:before{
+	content: 'Lecture';
+}
+.time-item-tutorial:before{
+	content: 'Tutorial';
+}
 .time-item {
 	display: flex;
 	justify-content: space-around;

@@ -220,6 +220,7 @@ input:focus ~ .input-top {
     font-weight: 600;
 }
 .nav-content {
+	list-style: none;
     width: 100%;
     position: relative;
     text-align: center;
